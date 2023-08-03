@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Form Validation Example</title>
+    <script>
+      // Custom validation functions
+      function validateUsername() {
+        var username = document.getElementById("username").value;
+        if (username === "") {
+          setError("usernameError", "Username must be filled out");
+          return false;
+        }
+        clearError("usernameError");
+        return true;
+      }
+
+      function validateEmail() {
+        var email = document.getElementById("email").value;
+        var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (!emailRegex.test(email)) {
+          setError("emailError", "Invalid email format");
+          return false;
+        }
+        clearError("emailError");
+        return true;
+      }
+
+      function validatePassword() {
+        var password = document.getElementById("password").value;
+        if (password === "") {
+          setError("passwordError", "Password must be filled out");
+          return false;
+        }
+        clearError("passwordError");
+        return true;
+      }
+
+      function validateConfirmPassword() {
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirmPassword").value;
+        if (confirmPassword === "") {
+          setError(
+            "confirmPasswordError",
+            "Confirm Password must be filled out"
+          );
+          return false;
+        }
+        if (password !== confirmPassword) {
+          setError("confirmPasswordError", "Passwords do not match");
+          return false;
+        }
+        clearError("confirmPasswordError");
+        return true;
+      }
+
+      // Utility functions
+      function setError(id, message) {
+        var errorElement = document.getElementById(id);
+        errorElement.innerText = message;
+      }
+
+      function clearError(id) {
+        var errorElement = document.getElementById(id);
+        errorElement.innerText = "";
+      }
+
+      // Event listeners
+      document
+        .getElementById("username")
+        .addEventListener("blur", validateUsername);
+      document.getElementById("email").addEventListener("blur", validateEmail);
+      document
+        .getElementById("password")
+        .addEventListener("blur", validatePassword);
+      document
+        .getElementById("confirmPassword")
+        .addEventListener("blur", validateConfirmPassword);
+
+      function validateForm() {
+        var isValid = true;
+        isValid = validateUsername() && isValid;
+        isValid = validateEmail() && isValid;
+        isValid = validatePassword() && isValid;
+        isValid = validateConfirmPassword() && isValid;
+
+        return isValid;
+      }
+    </script>
+  </head>
+  <body>
+    <h2>Form Validation Example</h2>
+    <form name="myForm" onsubmit="return validateForm()" method="post">
+      <label for="username">Username:</label>
+      <input type="text" name="username" id="username" />
+      <span id="usernameError"></span>
+
+      <label for="email">Email:</label>
+      <input type="email" name="email" id="email" />
+      <span id="emailError"></span>
+
+      <label for="password">Password:</label>
+      <input type="password" name="password" id="password" />
+      <span id="passwordError"></span>
+
+      <label for="confirmPassword">Confirm Password:</label>
+      <input type="password" name="confirmPassword" id="confirmPassword" />
+      <span id="confirmPasswordError"></span>
+
+      <input type="submit" value="Submit" />
+    </form>
+  </body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PROFILE</title>
+    <link rel="stylesheet" href="./css/form2.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body style="margin: 20px; margin-left: 80px">
+    <div class="alert-box">
+      <p class="alert"></p>
+    </div>
+    <h2 class="heading">Profile Page ☕︎</h2>
+    <div
+      style="display: flex; justify-content: space-around; align-items: center"
+    >
+      <h2 class="heading">
+        Happy to Welcome You Mr/Mis <span id="displayName"></span>
+      </h2>
+      <button id="log-out" class="btn btn-danger">Logout</button>
+    </div>
+    <hr />
+    <p>
+      <label class="heading" for="username"
+        >UserName ☕︎<br />
+        <input type="text" class="name input" name="username" id="username"
+      /></label>
+    </p>
+    <p>
+      <label class="heading" for="email"
+        >Email ☕︎<br />
+        <input type="email" class="email input" name="email" id="email"
+      /></label>
+    </p>
+    <p>
+      <label class="heading" for="address"
+        >Address ☕︎<br />
+        <textarea
+          name="address"
+          id="address"
+          cols="30"
+          rows="6"
+          placeholder="Enter you Full address here"
+        ></textarea>
+      </label>
+    </p>
+    <label class="heading radio" for="gender"
+      >Gender ----> <br /><input
+        type="radio"
+        class="radio"
+        name="gender"
+        value="male"
+        id="radio"
+      />Male
+      <input
+        type="radio"
+        class="radio"
+        name="gender"
+        value="female"
+        id="radio02"
+      />Female
+      <input
+        type="radio"
+        class="radio"
+        name="gender"
+        value="others"
+        id="radio03"
+      />others
+    </label>
+    <p>
+      <button
+        class="submit-btn btn btn-primary"
+        id="edit"
+        style="margin-right: 20px"
+      >
+        Edit
+      </button>
+      <button class="submit-btn btn btn-danger" id="delete">Delete</button>
+    </p>
+    <a href="./index.html" class="ancr"
+      ><button class="btn btn-info btn-home">Click Here to "HOME ☕︎"</button>
+    </a>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+
+      import {
+        getAuth,
+        deleteUser,
+      } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+      import {
+        getDatabase,
+        ref,
+        onValue,
+        update,
+      } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyB09C2Ou6V8u5v0e55Oem147wGxZF7Kpck",
+        authDomain: "form-one-83a47.firebaseapp.com",
+        databaseURL: "https://form-one-83a47-default-rtdb.firebaseio.com",
+        projectId: "form-one-83a47",
+        storageBucket: "form-one-83a47.appspot.com",
+        messagingSenderId: "662464221155",
+        appId: "1:662464221155:web:bc415975a0aab9f1d55ad6",
+        measurementId: "G-3F40NB4R2Q",
+      };
+
+      const app = initializeApp(firebaseConfig);
+
+      const auth = getAuth();
+      let submit = document.querySelector("#submit-btn");
+      let edit = document.querySelector("#edit");
+      let deleteBtn = document.querySelector("#delete");
+
+      let urlQuery = new URLSearchParams(location.search);
+      let [id] = urlQuery.values();
+      let createdAt = null;
+
+      let db = getDatabase();
+      let userRef = ref(db, "/userCollection/" + id);
+      onValue(userRef, (snapshot) => {
+        let data = snapshot.val();
+        console.log(data);
+        let username = document.querySelector("#username");
+        let email = document.querySelector("#email");
+        let displayName = document.querySelector("#displayName");
+        displayName.textContent = data?.username;
+        username.value = data?.username;
+        email.value = data?.email;
+        sessionStorage.setItem(id, id);
+        createdAt = data?.createdAt;
+      });
+
+      edit.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (confirm("Are you sure to edit the user details?")) {
+          let username = document.querySelector("#username").value;
+          let email = document.querySelector("#email").value;
+          let address = document.querySelector("#address").value;
+          let gender = document.querySelector("#radio").value;
+          let gender01 = document.querySelector("#radio01").value;
+          let gender02 = document.querySelector("#radio02").value;
+          let newData = {
+            id: id,
+            username: username,
+            email: email,
+            address: address,
+            gender: gender,
+            gender01: gender01,
+            gender02: gender02,
+            createdAt: createdAt,
+          };
+
+          let updates = {};
+          updates["/userCollection/" + id] = newData;
+          update(ref(db), updates);
+          alert("User details updated successfully");
+        }
+      });
+      let logout = document.querySelector("#log-out");
+      logout.addEventListener("click", () => {
+        sessionStorage.removeItem(id);
+        alert("User logged out successfully");
+        setTimeout(() => {
+          window.location.href = "./login.html";
+        }, 2000);
+      });
+
+      deleteBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (confirm("Are you sure to delete the account")) {
+          const user = auth.currentUser;
+          deleteUser(user)
+            .then(() => {
+              console.log("User deleted");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          let updates = {};
+          updates["/userCollection/" + id] = null;
+          update(ref(db), updates);
+          alert("User details deleted successfully");
+          setTimeout(() => {
+            window.location.href = "./register.html";
+          }, 2000);
+        }
+      });
+    </script>
+  </body>
+</html>

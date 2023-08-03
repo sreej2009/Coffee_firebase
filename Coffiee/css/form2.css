@@ -1,0 +1,79 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*:focus {
+  outline: none;
+}
+
+body {
+  width: 100wh;
+  min-height: 100vh;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: url(../img/coffee04.jpg);
+  background-size: cover;
+  background-position: center;
+  font-family: "roboto", sans-serif;
+}
+.heading {
+  font-family: cursive;
+  color: #fff;
+}
+
+.input,
+textarea .submit-btn {
+  margin: 20px auto;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.01);
+  width: 250px;
+  padding: 10px;
+  transition: 0.5s;
+  color: #fff;
+  text-transform: capitalize;
+  border: none;
+  font-size: larger;
+}
+#address {
+  margin: 20px auto;
+  border-radius: 10px;
+  background: rgba(255, 225, 225, 0.01);
+  color: #fff;
+
+  transition: 0.5s;
+  text-transform: capitalize;
+  border: none;
+}
+.radio {
+  margin: 20px;
+  display: flex;
+  font-size: x-large;
+  border: none;
+}
+
+input:focus,
+#address:focus {
+  color: #fff;
+  box-shadow: 0 0 40px pink;
+  font-size: x-large;
+  border: none;
+}
+
+.submit-btn {
+  width: auto;
+  padding: 0 20px;
+  cursor: pointer;
+  margin: 50px auto 0;
+  font-size: x-large;
+}
+
+.ancr {
+  display: flex;
+  text-decoration-line: none;
+  justify-content: center;
+  align-items: center;
+}

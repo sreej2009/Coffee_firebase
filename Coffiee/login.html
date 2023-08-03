@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Page</title>
+
+    <link rel="stylesheet" href="css/form.css" />
+    <script>
+      function validateForm() {
+        var email = document.forms["myForm"]["email"].value;
+        var password = document.forms["myForm"]["password"].value;
+
+        if (email == "") {
+          alert("Email must be filled out");
+          return false;
+        }
+
+        if (password == "") {
+          alert("Password must be filled out");
+          return false;
+        }
+
+        // Validate email format using regular expression
+        var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (!emailRegex.test(email)) {
+          alert("Invalid email format");
+          return false;
+        }
+
+        // Check if password meets complexity requirements
+        // Example: At least 8 characters with at least one uppercase letter, one lowercase letter, and one number
+        var passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+        if (!passwordRegex.test(password)) {
+          alert(
+            "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number"
+          );
+          return false;
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <form id="form" name="myForm" method="post">
+      <h1 class="heading">Login ☕︎ Here</h1>
+
+      <label for="email">
+        <input type="email" placeholder="Enter Email" name="email" id="email"
+      /></label>
+
+      <label for="password">
+        <input
+          type="password"
+          name="password"
+          placeholder="password"
+          id="password"
+      /></label>
+      <button class="submit-btn" id="login-btn" onclick=" validateForm()">
+        Login
+      </button>
+      <a href="./register.html" class="link"
+        >Don't have an account? Register one</a
+      >
+    </form>
+
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+
+      import {
+        getAuth,
+        signInWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyB09C2Ou6V8u5v0e55Oem147wGxZF7Kpck",
+        authDomain: "form-one-83a47.firebaseapp.com",
+        databaseURL: "https://form-one-83a47-default-rtdb.firebaseio.com",
+        projectId: "form-one-83a47",
+        storageBucket: "form-one-83a47.appspot.com",
+        messagingSenderId: "662464221155",
+        appId: "1:662464221155:web:bc415975a0aab9f1d55ad6",
+        measurementId: "G-3F40NB4R2Q",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth();
+      let submit = document.querySelector("#login-btn");
+      submit.addEventListener("click", (e) => {
+        e.preventDefault();
+        let email = document.querySelector("#email").value;
+        let password = document.querySelector("#password").value;
+
+        signInWithEmailAndPassword(auth, email, password)
+          .then((userDetail) => {
+            console.log(userDetail);
+            const uid = userDetail.user.uid;
+            console.log(uid);
+
+            alert("User logined successfully");
+            setTimeout(() => {
+              // `./profile-info.html?id=${userDetail.user.uid}`;
+              window.location.href = "./index.html";
+              // Window.location.href = `./profile-info.html?id=${userDetail.user.uid}`;
+            }, 5000);
+            setTimeout(() => {
+              window.location.href = `./profile-info.html?id=${userDetail.user.uid}`;
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      });
+    </script>
+  </body>
+</html>
